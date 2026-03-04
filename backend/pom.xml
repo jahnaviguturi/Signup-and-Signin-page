@@ -11,8 +11,8 @@
 	<groupId>com.lms</groupId>
 	<artifactId>lms-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>lms-backend</name>
-	<description>LMS Backend with Spring Boot</description>
+	<name>DevPath Backend</name>
+	<description>Full-stack LMS Backend for DevPath</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>

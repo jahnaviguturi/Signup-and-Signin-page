@@ -15,7 +15,7 @@ const Navbar = () => {
         <nav className="navbar">
             <Link to="/" className="logo">
                 <BookOpen size={24} />
-                LMS <span>Pro</span>
+                DevPath <span>LMS</span>
             </Link>
 
             <div className="nav-links">
