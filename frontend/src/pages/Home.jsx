@@ -38,7 +38,7 @@ const Home = () => {
         <div className="container" style={{ marginTop: '4rem', paddingBottom: '4rem' }}>
             <div style={{ marginBottom: '3rem' }}>
                 <h1 style={{ marginBottom: '0.5rem' }}>What will you learn today?</h1>
-                <p className="text-muted">Explore high-quality, curated courses for modern developers.</p>
+                <p className="text-muted">Explore high-quality, curated courses on DevPath.</p>
             </div>
 
             <div className="course-grid">
