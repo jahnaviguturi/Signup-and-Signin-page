@@ -86,17 +86,22 @@ const initDB = async () => {
         }
 
         connection.release();
+        return true; // Success
     } catch (err) {
         console.error('CRITICAL: Database initialization failed:', err.message);
+        throw err; // Re-throw to prevent server startup
     }
 };
 
-initDB();
-
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+// Start server only after DB initialization is complete
+initDB().then(() => {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}).catch(err => {
+    console.error('SERVER STARTUP PREVENTED: Database initialization failed.');
+    console.error(err);
 });
 
 module.exports = app;
