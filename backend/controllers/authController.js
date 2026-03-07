@@ -26,13 +26,16 @@ const register = async (req, res) => {
         res.status(201).json({ message: 'Register success' });
     } catch (error) {
         console.error('Registration error:', error);
-        // Handle duplicate entry (if username or email is unique in the future)
+        // Handle duplicate entry
         if (error.code === 'ER_DUP_ENTRY') {
             return res.status(409).json({ message: 'User already exists' });
         }
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({
+            message: 'Server error',
+            error: error.message // Expose message for debugging
+        });
     }
-};
+}
 
 const login = async (req, res) => {
     try {
@@ -80,9 +83,12 @@ const login = async (req, res) => {
         res.status(200).json({ message: 'Login successful' });
     } catch (error) {
         console.error('Login error:', error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({
+            message: 'Server error',
+            error: error.message // Expose message for debugging
+        });
     }
-};
+}
 
 const logout = (req, res) => {
     res.clearCookie('token');

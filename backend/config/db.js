@@ -23,6 +23,10 @@ const pool = mysql.createPool({
   connectTimeout: 10000 // 10 seconds timeout
 });
 
-console.log('Database pool initialized for host:', process.env.DB_HOST);
+console.log('Database pool initialized:');
+console.log('- Host:', host);
+console.log('- Port:', port);
+console.log('- User defined:', !!process.env.DB_USER);
+console.log('- DB Name defined:', !!process.env.DB_NAME);
 
 module.exports = pool;
