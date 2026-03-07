@@ -26,13 +26,24 @@ const register = async (req, res) => {
         res.status(201).json({ message: 'Register success' });
     } catch (error) {
         console.error('Registration error:', error);
+
+        let dbDetails = {};
+        try {
+            // Attempt to get schema for debugging
+            const [schema] = await db.query('DESCRIBE users');
+            dbDetails.schema = schema.map(s => s.Field);
+        } catch (dbErr) {
+            dbDetails.dbError = dbErr.message;
+        }
+
         // Handle duplicate entry
         if (error.code === 'ER_DUP_ENTRY') {
             return res.status(409).json({ message: 'User already exists' });
         }
         res.status(500).json({
             message: 'Server error',
-            error: error.message // Expose message for debugging
+            error: error.message,
+            diagnostic: dbDetails
         });
     }
 }

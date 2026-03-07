@@ -60,7 +60,8 @@ const initDB = async () => {
             );
         `;
 
-        await connection.execute(createTableQuery);
+        // Use .query() for DDL as it's more compatible than .execute()
+        await connection.query(createTableQuery);
         console.log('Database tables initialized (users table checked/created).');
 
         // Ensure columns exist (Schema migration for existing tables)
@@ -74,16 +75,21 @@ const initDB = async () => {
 
         for (const col of columns) {
             try {
-                // We use a separate try-catch for each column because some might already exist
-                await connection.execute(`ALTER TABLE users ADD COLUMN ${col.name} ${col.type}`);
-                console.log(`Added missing column: ${col.name}`);
+                // We use .query() for ALTER TABLE as well
+                await connection.query(`ALTER TABLE users ADD COLUMN ${col.name} ${col.type}`);
+                console.log(`Successfully added missing column: ${col.name}`);
             } catch (err) {
-                // If column already exists (ER_DUP_COLUMN_NAME), we ignore it
-                if (err.code !== 'ER_DUP_COLUMN_NAME' && err.code !== 'ER_CANT_DROP_FIELD_OR_KEY') {
-                    console.error(`Error adding column ${col.name}:`, err.message);
+                // ER_DUP_COLUMN_NAME (1060). Node-mysql2 sometimes uses err.errno
+                if (err.errno !== 1060 && err.code !== 'ER_DUP_COLUMN_NAME') {
+                    console.error(`Status of column ${col.name}:`, err.message);
                 }
             }
         }
+
+        // Final verification: log the actual schema
+        const [rows] = await connection.query('DESCRIBE users');
+        console.log('Current users table schema:');
+        rows.forEach(row => console.log(` - ${row.Field}: ${row.Type}`));
 
         connection.release();
         return true; // Success
